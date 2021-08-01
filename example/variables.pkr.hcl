@@ -1,4 +1,4 @@
 locals {
-  foo = data.scaffolding-my-datasource.mock-data.foo
-  bar = data.scaffolding-my-datasource.mock-data.bar
+  username = data.tss.mock-data.username
+  password = data.tss.mock-data.password
 }

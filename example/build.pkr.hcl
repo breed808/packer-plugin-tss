@@ -7,12 +7,12 @@ packer {
   }
 }
 
-source "scaffolding-my-builder" "foo-example" {
-  mock = local.foo
+source "scaffolding-my-builder" "username-example" {
+  mock = local.username
 }
 
-source "scaffolding-my-builder" "bar-example" {
-  mock = local.bar
+source "scaffolding-my-builder" "password-example" {
+  mock = local.password
 }
 
 build {
