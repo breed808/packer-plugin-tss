@@ -1,5 +1,7 @@
 module packer-plugin-tss
 
+replace github.com/thycotic/tss-sdk-go => github.com/breed808/tss-sdk-go v1.0.1-0.20210802091429-0c674ca20814
+
 go 1.16
 
 require (

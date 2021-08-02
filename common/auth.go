@@ -11,6 +11,8 @@ type AuthConfig struct {
 	Password string `mapstructure:"password" require:"true"`
 	// The Secret Server base URL. E.G. https://localhost/SecretServer
 	ServerURL string `mapstructure:"server_url" require:"true"`
+	// Domain of Secret Server account, if account uses LDAP authentication.
+	Domain string `mapstructure:"domain"`
 }
 
 func (c *AuthConfig) CreateClient() (*tss.Server, error) {
@@ -19,6 +21,7 @@ func (c *AuthConfig) CreateClient() (*tss.Server, error) {
 			Username: c.Username,
 			Password: c.Password,
 		},
+		Domain:    c.Domain,
 		ServerURL: c.ServerURL,
 
 		// TLD and Tenant fields are included for completeness, but not currently handled.

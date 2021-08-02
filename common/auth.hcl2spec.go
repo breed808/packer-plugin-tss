@@ -13,6 +13,7 @@ type FlatAuthConfig struct {
 	Username  *string `mapstructure:"username" require:"true" cty:"username" hcl:"username"`
 	Password  *string `mapstructure:"password" require:"true" cty:"password" hcl:"password"`
 	ServerURL *string `mapstructure:"server_url" require:"true" cty:"server_url" hcl:"server_url"`
+	Domain    *string `mapstructure:"domain" cty:"domain" hcl:"domain"`
 }
 
 // FlatMapstructure returns a new FlatAuthConfig.
@@ -30,6 +31,7 @@ func (*FlatAuthConfig) HCL2Spec() map[string]hcldec.Spec {
 		"username":   &hcldec.AttrSpec{Name: "username", Type: cty.String, Required: false},
 		"password":   &hcldec.AttrSpec{Name: "password", Type: cty.String, Required: false},
 		"server_url": &hcldec.AttrSpec{Name: "server_url", Type: cty.String, Required: false},
+		"domain":     &hcldec.AttrSpec{Name: "domain", Type: cty.String, Required: false},
 	}
 	return s
 }
