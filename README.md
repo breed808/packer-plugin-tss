@@ -52,6 +52,7 @@ Add `data` blocks to use secrets from the Thycotic Secret Server. Note that a us
 data "tss" "mock-data" {
   username = "testing" # TSS username
   password = "test123" # TSS password
+  server_url = "https://my-thycotic-server.example.com/SecretServer"
 
   secret_id = "500" # ID of TSS secret to retrieve
 }
@@ -63,6 +64,7 @@ If the TSS user account uses LDAP for authentication, a `domain` must be specifi
 data "tss" "mock-data" {
   username = "testing" # TSS username
   password = "test123" # TSS password
+  server_url = "https://my-thycotic-server.example.com/SecretServer"
   domain = "example.com" # Domain of user. I.E. testing@example.com
 
   secret_id = "500" # ID of TSS secret to retrieve
@@ -80,6 +82,7 @@ source "null" "example" {
 data "tss" "mock-data" {
   username = "testing" # TSS username
   password = "test123" # TSS password
+  server_url = "https://my-thycotic-server.example.com/SecretServer"
 
   secret_id = "500" # ID of TSS secret to retrieve
 }
