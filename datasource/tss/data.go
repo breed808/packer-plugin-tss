@@ -3,7 +3,6 @@ package tss
 
 import (
 	"fmt"
-
 	"packer-plugin-tss/common"
 
 	"github.com/hashicorp/hcl/v2/hcldec"
@@ -14,7 +13,8 @@ import (
 
 type Config struct {
 	common.AuthConfig `mapstructure:",squash"`
-	SecretID          int `mapstructure:"secret_id" required:"true"`
+	SecretID          int      `mapstructure:"secret_id" required:"true"`
+	SecretFields      []string `mapstructure:"secret_fields" required:"true"`
 }
 
 type Datasource struct {
@@ -22,11 +22,10 @@ type Datasource struct {
 }
 
 type DatasourceOutput struct {
+	// Secret ID in TSS.
 	ID int `mapstructure:"id"`
-
-	// Though TSS stores other fields, retrieve only credential details (username & password) for now.
-	Username string `mapstructure:"username"`
-	Password string `mapstructure:"password"`
+	// Values of the requested Secret Fields.
+	Fields map[string]string `mapstructure:"fields"`
 }
 
 func (d *Datasource) ConfigSpec() hcldec.ObjectSpec {
@@ -50,32 +49,30 @@ func (d *Datasource) OutputSpec() hcldec.ObjectSpec {
 }
 
 func (d *Datasource) Execute() (cty.Value, error) {
-	output := DatasourceOutput{}
-
-	emptyOutput := hcl2helper.HCL2ValueFromConfig(output, d.OutputSpec())
-
 	client, err := d.config.CreateClient()
 	if err != nil {
-		return emptyOutput, err
+		return cty.NullVal(cty.EmptyObject), err
 	}
 
 	// TSS SDK only supports retrieving secrets by ID
 	secret, err := client.Secret(d.config.SecretID)
 	if err != nil {
-		return emptyOutput, err
+		return cty.NullVal(cty.EmptyObject), err
 	}
 
-	output.ID = secret.ID
+	secretFields := make(map[string]string, len(d.config.SecretFields))
 
-	var success bool
-	output.Username, success = secret.Field("username")
-	if !success {
-		output.Username = ""
+	for _, field := range d.config.SecretFields {
+		var success bool
+		secretFields[field], success = secret.Field(field)
+		if !success {
+			secretFields[field] = ""
+		}
 	}
 
-	output.Password, success = secret.Field("password")
-	if !success {
-		output.Password = ""
+	output := DatasourceOutput{
+		ID:     secret.ID,
+		Fields: secretFields,
 	}
 
 	return hcl2helper.HCL2ValueFromConfig(output, d.OutputSpec()), nil

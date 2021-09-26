@@ -20,7 +20,7 @@ packer {
   required_plugins {
     tss = {
       version = ">= 0.1.0"
-      source  = "github.com/breed808/packer-plugin-tss"
+      source  = "github.com/breed808/tss"
     }
   }
 }
@@ -54,7 +54,8 @@ data "tss" "mock-data" {
   password = "test123" # TSS password
   server_url = "https://my-thycotic-server.example.com/SecretServer"
 
-  secret_id = "500" # ID of TSS secret to retrieve
+  secret_id     = 500                      # ID of TSS secret to retrieve
+  secret_fields = ["username", "password"] # Fields to retrieve from the TSS secret
 }
 ```
 
@@ -67,7 +68,8 @@ data "tss" "mock-data" {
   server_url = "https://my-thycotic-server.example.com/SecretServer"
   domain = "example.com" # Domain of user. I.E. testing@example.com
 
-  secret_id = "500" # ID of TSS secret to retrieve
+  secret_id     = 500                      # ID of TSS secret to retrieve
+  secret_fields = ["username", "password"] # Fields to retrieve from the TSS secret
 }
 ```
 
@@ -84,7 +86,8 @@ data "tss" "mock-data" {
   password = "test123" # TSS password
   server_url = "https://my-thycotic-server.example.com/SecretServer"
 
-  secret_id = "500" # ID of TSS secret to retrieve
+  secret_id     = 500                      # ID of TSS secret to retrieve
+  secret_fields = ["username", "password"] # Fields to retrieve from the TSS secret
 }
 
 build {
@@ -105,8 +108,8 @@ build {
           datacenter = "PackerDatacenter"
           datastore  = "datastore1"
           host       = "123.45.678.9"
-          password   = data.mock-data.password
-          username   = data.mock-data.username
+          password   = data.mock-data.fields.username
+          username   = data.mock-data.fields.password
       }
     }
 }
