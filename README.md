@@ -115,5 +115,14 @@ build {
 }
 ```
 
+**NOTE:** Packer does not seem to support sensitive values from custom data sources yet. If you are passing the variables to provisioners and wish to keep them sensitive, you can create a sensitive local.
+
+```hcl
+local "my_secret_password" {
+  expression = "${data.mock-data.fields.password}"
+  sensitive  = true
+}
+```
+
 ## Packer Compatibility
 This template is compatible with Packer >= v1.7.0
