@@ -10,11 +10,12 @@ import (
 // FlatConfig is an auto-generated flat version of Config.
 // Where the contents of a field with a `mapstructure:,squash` tag are bubbled up.
 type FlatConfig struct {
-	Username  *string `mapstructure:"username" require:"true" cty:"username" hcl:"username"`
-	Password  *string `mapstructure:"password" require:"true" cty:"password" hcl:"password"`
-	ServerURL *string `mapstructure:"server_url" require:"true" cty:"server_url" hcl:"server_url"`
-	Domain    *string `mapstructure:"domain" cty:"domain" hcl:"domain"`
-	SecretID  *int    `mapstructure:"secret_id" required:"true" cty:"secret_id" hcl:"secret_id"`
+	Username     *string  `mapstructure:"username" require:"true" cty:"username" hcl:"username"`
+	Password     *string  `mapstructure:"password" require:"true" cty:"password" hcl:"password"`
+	ServerURL    *string  `mapstructure:"server_url" require:"true" cty:"server_url" hcl:"server_url"`
+	Domain       *string  `mapstructure:"domain" cty:"domain" hcl:"domain"`
+	SecretID     *int     `mapstructure:"secret_id" required:"true" cty:"secret_id" hcl:"secret_id"`
+	SecretFields []string `mapstructure:"secret_fields" required:"true" cty:"secret_fields" hcl:"secret_fields"`
 }
 
 // FlatMapstructure returns a new FlatConfig.
@@ -29,11 +30,12 @@ func (*Config) FlatMapstructure() interface{ HCL2Spec() map[string]hcldec.Spec }
 // The decoded values from this spec will then be applied to a FlatConfig.
 func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 	s := map[string]hcldec.Spec{
-		"username":   &hcldec.AttrSpec{Name: "username", Type: cty.String, Required: false},
-		"password":   &hcldec.AttrSpec{Name: "password", Type: cty.String, Required: false},
-		"server_url": &hcldec.AttrSpec{Name: "server_url", Type: cty.String, Required: false},
-		"domain":     &hcldec.AttrSpec{Name: "domain", Type: cty.String, Required: false},
-		"secret_id":  &hcldec.AttrSpec{Name: "secret_id", Type: cty.Number, Required: false},
+		"username":      &hcldec.AttrSpec{Name: "username", Type: cty.String, Required: false},
+		"password":      &hcldec.AttrSpec{Name: "password", Type: cty.String, Required: false},
+		"server_url":    &hcldec.AttrSpec{Name: "server_url", Type: cty.String, Required: false},
+		"domain":        &hcldec.AttrSpec{Name: "domain", Type: cty.String, Required: false},
+		"secret_id":     &hcldec.AttrSpec{Name: "secret_id", Type: cty.Number, Required: false},
+		"secret_fields": &hcldec.AttrSpec{Name: "secret_fields", Type: cty.List(cty.String), Required: false},
 	}
 	return s
 }
@@ -41,9 +43,8 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 // FlatDatasourceOutput is an auto-generated flat version of DatasourceOutput.
 // Where the contents of a field with a `mapstructure:,squash` tag are bubbled up.
 type FlatDatasourceOutput struct {
-	ID       *int    `mapstructure:"id" cty:"id" hcl:"id"`
-	Username *string `mapstructure:"username" cty:"username" hcl:"username"`
-	Password *string `mapstructure:"password" cty:"password" hcl:"password"`
+	ID     *int              `mapstructure:"id" cty:"id" hcl:"id"`
+	Fields map[string]string `mapstructure:"fields" cty:"fields" hcl:"fields"`
 }
 
 // FlatMapstructure returns a new FlatDatasourceOutput.
@@ -58,9 +59,8 @@ func (*DatasourceOutput) FlatMapstructure() interface{ HCL2Spec() map[string]hcl
 // The decoded values from this spec will then be applied to a FlatDatasourceOutput.
 func (*FlatDatasourceOutput) HCL2Spec() map[string]hcldec.Spec {
 	s := map[string]hcldec.Spec{
-		"id":       &hcldec.AttrSpec{Name: "id", Type: cty.Number, Required: false},
-		"username": &hcldec.AttrSpec{Name: "username", Type: cty.String, Required: false},
-		"password": &hcldec.AttrSpec{Name: "password", Type: cty.String, Required: false},
+		"id":     &hcldec.AttrSpec{Name: "id", Type: cty.Number, Required: false},
+		"fields": &hcldec.AttrSpec{Name: "fields", Type: cty.Map(cty.String), Required: false},
 	}
 	return s
 }
