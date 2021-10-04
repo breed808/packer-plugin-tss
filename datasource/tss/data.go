@@ -14,7 +14,8 @@ import (
 type Config struct {
 	common.AuthConfig `mapstructure:",squash"`
 	SecretID          int      `mapstructure:"secret_id" required:"true"`
-	SecretFields      []string `mapstructure:"secret_fields" required:"true"`
+	SecretFields      []string `mapstructure:"secret_fields"`
+	ExcludeFields     []string `mapstructure:"exclude_fields"`
 }
 
 type Datasource struct {
@@ -60,13 +61,12 @@ func (d *Datasource) Execute() (cty.Value, error) {
 		return cty.NullVal(cty.EmptyObject), err
 	}
 
-	secretFields := make(map[string]string, len(d.config.SecretFields))
+	secretFields := make(map[string]string, len(secret.Fields))
 
-	for _, field := range d.config.SecretFields {
-		var success bool
-		secretFields[field], success = secret.Field(field)
-		if !success {
-			secretFields[field] = ""
+	for _, field := range secret.Fields {
+		if (len(d.config.SecretFields) == 0 || containsString(d.config.SecretFields, field.Slug)) &&
+			(len(d.config.ExcludeFields) == 0 || !containsString(d.config.ExcludeFields, field.Slug)) {
+			secretFields[field.Slug] = field.ItemValue
 		}
 	}
 
@@ -76,4 +76,13 @@ func (d *Datasource) Execute() (cty.Value, error) {
 	}
 
 	return hcl2helper.HCL2ValueFromConfig(output, d.OutputSpec()), nil
+}
+
+func containsString(slice []string, item string) bool {
+	for _, sliceItem := range slice {
+		if sliceItem == item {
+			return true
+		}
+	}
+	return false
 }
