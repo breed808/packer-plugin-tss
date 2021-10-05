@@ -1,0 +1,11 @@
+<!-- Code generated from the comments of the Config struct in datasource/tss/data.go; DO NOT EDIT MANUALLY -->
+
+- `secret_fields` ([]string) - Names of the Secret Fields to extract from the Secret ID.
+  If empty, all fields will be retrieved.
+  You can also use `exclude_fields` to omit some fields from the output.
+
+- `exclude_fields` ([]string) - Names of the Secret Fields to exclude when extracting fields.
+  The fields provided in this variable will not be returned to Packer,
+  even when they are explicitly defined in `secret_fields`.
+
+<!-- End of code generated from the comments of the Config struct in datasource/tss/data.go; -->

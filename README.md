@@ -98,9 +98,9 @@ data "tss" "mock-data" {
   password   = "test123" # TSS password
   server_url = "https://my-thycotic-server.example.com/SecretServer"
 
-  secret_id      = 500                                 # ID of TSS secret to retrieve
-  secret_fields  = ["username", "password", "ssh_key"] # Fields to retrieve from the TSS secret
-  exclude_fields = ["ssh_key"]                         # 'ssh_key' will not be retrieved, even when listed in 'secret_fields', as 'exclude_fields' takes precendence
+  secret_id      = 500                                # ID of TSS secret to retrieve
+  secret_fields  = ["username", "password", "notes"]  # Fields to retrieve from the TSS secret
+  exclude_fields = ["notes"]                          # 'notes' will not be retrieved, even when listed in 'secret_fields', as 'exclude_fields' takes precedence
 }
 
 build {
@@ -139,4 +139,4 @@ local "my_secret_password" {
 
 ## Packer Compatibility
 
-This template is compatible with Packer >= v1.7.0
+This plugin is compatible with Packer >= v1.7.0
