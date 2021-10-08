@@ -13,7 +13,7 @@ automatic installation of Packer plugins. Read the
 [Packer documentation](https://www.packer.io/docs/commands/init) for more information.
 
 To install this plugin, copy and paste this code into your Packer configuration .
-Then, run [`packer init`](https://www.packer.io/docs/commands/init).
+Then, run [ `packer init` ](https://www.packer.io/docs/commands/init).
 
 ```hcl
 packer {
@@ -33,7 +33,6 @@ Once you have downloaded the latest archive corresponding to your target OS,
 uncompress it to retrieve the plugin binary file corresponding to your platform.
 To install the plugin, please follow the Packer documentation on
 [installing a plugin](https://www.packer.io/docs/extending/plugins/#installing-plugins).
-
 
 #### From Source
 
@@ -55,7 +54,19 @@ data "tss" "mock-data" {
   server_url = "https://my-thycotic-server.example.com/SecretServer"
 
   secret_id     = 500                      # ID of TSS secret to retrieve
-  secret_fields = ["username", "password"] # Fields to retrieve from the TSS secret
+  secret_fields = ["username", "password"] # Optional. Fields to retrieve from the TSS secret. If empty, all fields will be retrieved.
+}
+```
+
+Retrieve all fields from Secret ID `500` :
+
+```hcl
+data "tss" "mock-data" {
+  username = "testing" # TSS username
+  password = "test123" # TSS password
+  server_url = "https://my-thycotic-server.example.com/SecretServer"
+
+  secret_id     = 500
 }
 ```
 
@@ -63,13 +74,14 @@ If the TSS user account uses LDAP for authentication, a `domain` must be specifi
 
 ```hcl
 data "tss" "mock-data" {
-  username = "testing" # TSS username
-  password = "test123" # TSS password
+  username   = "testing" # TSS username
+  password   = "test123" # TSS password
   server_url = "https://my-thycotic-server.example.com/SecretServer"
-  domain = "example.com" # Domain of user. I.E. testing@example.com
+  domain     = "example.com" # Domain of user. I.E. testing@example.com
 
-  secret_id     = 500                      # ID of TSS secret to retrieve
-  secret_fields = ["username", "password"] # Fields to retrieve from the TSS secret
+  secret_id      = 500                      # ID of TSS secret to retrieve
+  secret_fields  = ["username", "password"] # Optional. Fields to retrieve from the TSS secret. If empty, all fields will be retrieved.
+  exclude_fields = []                       # Optional. The listed fields will not be retrieved from the TSS secret.
 }
 ```
 
@@ -82,36 +94,37 @@ source "null" "example" {
 }
 
 data "tss" "mock-data" {
-  username = "testing" # TSS username
-  password = "test123" # TSS password
+  username   = "testing" # TSS username
+  password   = "test123" # TSS password
   server_url = "https://my-thycotic-server.example.com/SecretServer"
 
-  secret_id     = 500                      # ID of TSS secret to retrieve
-  secret_fields = ["username", "password"] # Fields to retrieve from the TSS secret
+  secret_id      = 500                                # ID of TSS secret to retrieve
+  secret_fields  = ["username", "password", "notes"]  # Fields to retrieve from the TSS secret
+  exclude_fields = ["notes"]                          # 'notes' will not be retrieved, even when listed in 'secret_fields', as 'exclude_fields' takes precedence
 }
 
 build {
   sources = [
     "source.null.example"
-    ]
+  ]
 
-    post-processors {
-      post-processor "artifice" {
-          files = ["output-vmware-iso/packer-vmware-iso.vmx"]
-      }
-      
-      post-processor "vsphere" {
-          keep_input_artifact = true
-          vm_name    = "packerparty"
-          vm_network = "VM Network"
-          cluster    = "123.45.678.1"
-          datacenter = "PackerDatacenter"
-          datastore  = "datastore1"
-          host       = "123.45.678.9"
-          password   = data.mock-data.fields.username
-          username   = data.mock-data.fields.password
-      }
+  post-processors {
+    post-processor "artifice" {
+      files = ["output-vmware-iso/packer-vmware-iso.vmx"]
     }
+
+    post-processor "vsphere" {
+      keep_input_artifact = true
+      vm_name             = "packerparty"
+      vm_network          = "VM Network"
+      cluster             = "123.45.678.1"
+      datacenter          = "PackerDatacenter"
+      datastore           = "datastore1"
+      host                = "123.45.678.9"
+      password            = data.mock-data.fields.username
+      username            = data.mock-data.fields.password
+    }
+  }
 }
 ```
 
@@ -125,4 +138,5 @@ local "my_secret_password" {
 ```
 
 ## Packer Compatibility
-This template is compatible with Packer >= v1.7.0
+
+This plugin is compatible with Packer >= v1.7.0

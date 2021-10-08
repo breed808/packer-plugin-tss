@@ -1,3 +1,4 @@
+//go:generate packer-sdc struct-markdown
 //go:generate packer-sdc mapstructure-to-hcl2 -type Config,DatasourceOutput
 package tss
 
@@ -13,8 +14,16 @@ import (
 
 type Config struct {
 	common.AuthConfig `mapstructure:",squash"`
-	SecretID          int      `mapstructure:"secret_id" required:"true"`
-	SecretFields      []string `mapstructure:"secret_fields" required:"true"`
+	// Secret ID to retrieve from Thycotic Secret Server.
+	SecretID int `mapstructure:"secret_id" required:"true"`
+	// Names of the Secret Fields to extract from the Secret ID.
+	// If empty, all fields will be retrieved.
+	// You can also use `exclude_fields` to omit some fields from the output.
+	SecretFields []string `mapstructure:"secret_fields"`
+	// Names of the Secret Fields to exclude when extracting fields.
+	// The fields provided in this variable will not be returned to Packer,
+	// even when they are explicitly defined in `secret_fields`.
+	ExcludeFields []string `mapstructure:"exclude_fields"`
 }
 
 type Datasource struct {
@@ -24,7 +33,8 @@ type Datasource struct {
 type DatasourceOutput struct {
 	// Secret ID in TSS.
 	ID int `mapstructure:"id"`
-	// Values of the requested Secret Fields.
+	// Key/value combination of the retrieved Secret Fields, where the key is the name of the field.
+	// NOTE: The fields defined in `exclude_fields` will not be retrieved.
 	Fields map[string]string `mapstructure:"fields"`
 }
 
@@ -60,13 +70,12 @@ func (d *Datasource) Execute() (cty.Value, error) {
 		return cty.NullVal(cty.EmptyObject), err
 	}
 
-	secretFields := make(map[string]string, len(d.config.SecretFields))
+	secretFields := make(map[string]string, len(secret.Fields))
 
-	for _, field := range d.config.SecretFields {
-		var success bool
-		secretFields[field], success = secret.Field(field)
-		if !success {
-			secretFields[field] = ""
+	for _, field := range secret.Fields {
+		if (len(d.config.SecretFields) == 0 || containsString(d.config.SecretFields, field.Slug)) &&
+			(len(d.config.ExcludeFields) == 0 || !containsString(d.config.ExcludeFields, field.Slug)) {
+			secretFields[field.Slug] = field.ItemValue
 		}
 	}
 
@@ -76,4 +85,13 @@ func (d *Datasource) Execute() (cty.Value, error) {
 	}
 
 	return hcl2helper.HCL2ValueFromConfig(output, d.OutputSpec()), nil
+}
+
+func containsString(slice []string, item string) bool {
+	for _, sliceItem := range slice {
+		if sliceItem == item {
+			return true
+		}
+	}
+	return false
 }

@@ -1,0 +1,67 @@
+---
+description: |
+  The Thycotic Secret Server data source returns the fields of a Secret ID in TSS.
+page_title: Thycotic Secret Server - Data Source
+nav_title: Thycotic Secret Server
+---
+
+# Thycotic Secret Server Data Source
+
+The Thycotic Secret Server data source returns the fields of a Secret ID in TSS.
+
+-> **Note:** Data sources is a feature exclusively available to HCL2 templates.
+
+Basic examples of usage:
+
+```hcl
+data "tss" "basic-example" {
+  username = "testing" # TSS username
+  password = "test123" # TSS password
+  server_url = "https://my-thycotic-server.example.com/SecretServer"
+
+  # TSS Secret ID
+  secret_id      = 500
+  # Optional. The listed fields will not be retrieved from the TSS secret.
+  exclude_fields = ["notes"]
+  # Optional. Fields to retrieve from the TSS secret. If empty, all fields will be retrieved.
+  secret_fields  = [
+    "username",
+    "password",
+  ]
+}
+```
+
+This extracts the requested fields from the Secret using the provided credentials.
+
+## Configuration Reference
+
+### Required
+
+@include 'datasource/tss/Config-required.mdx'
+
+### Optional
+
+@include 'datasource/tss/Config-not-required.mdx'
+
+## Output Data
+
+@include 'datasource/tss/DatasourceOutput.mdx'
+
+## Authentication
+
+The TSS Go SDK is used for authentication.
+
+-> **Note:** A data source will start and execute in your own authentication session.
+
+@include 'common/AuthConfig-not-required.mdx'
+
+Basic example of the Thycotic Secret Server data source authentication using LDAP authentication:
+
+```hcl
+data "tss" "basic-example" {
+  username   = "testing" # TSS username
+  password   = "test123" # TSS password
+  server_url = "https://my-thycotic-server.example.com/SecretServer"
+  domain     = "example.com" # Domain of user. I.E. testing@example.com
+}
+```

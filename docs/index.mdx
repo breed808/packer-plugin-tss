@@ -1,0 +1,30 @@
+---
+description: |
+  The Thycotic Secret Server plugin is able to fetch secrets from TSS. To achieve this, the plugin comes with
+  a data source.
+page_title: Thycotic Secret Server - Data Sources
+sidebar_title: Overview
+---
+
+# Amazon Data Sources
+
+The Thycotic Secret Server plugin is able to fetch secrets from TSS. To achieve this, the plugin comes with a data source.
+For more information, please see the below documentation:
+
+- [tss](/docs/datasources/tss) - Extract Secret Fields from a TSS Secret ID.
+
+## How to use this plugin
+
+From Packer v1.7.0, copy and paste this code into your Packer configuration to install this plugin.
+Then, run [`packer init`](/docs/commands/init).
+
+```hcl
+packer {
+  required_plugins {
+    tss = {
+      version = ">= 0.3.0"
+      source  = "github.com/breed808/packer-plugin-tss"
+    }
+  }
+}
+```

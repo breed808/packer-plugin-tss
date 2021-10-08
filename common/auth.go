@@ -1,3 +1,4 @@
+//go:generate packer-sdc struct-markdown
 //go:generate packer-sdc mapstructure-to-hcl2 -type AuthConfig
 
 package common
@@ -5,9 +6,9 @@ package common
 import tss "github.com/thycotic/tss-sdk-go/server"
 
 type AuthConfig struct {
-	// Username of account with access to Thycotic Secret Server
+	// Username of account with access to Thycotic Secret Server.
 	Username string `mapstructure:"username" require:"true"`
-	// Password of account with the provided Username
+	// Password of account with the provided Username.
 	Password string `mapstructure:"password" require:"true"`
 	// The Secret Server base URL. E.G. https://localhost/SecretServer
 	ServerURL string `mapstructure:"server_url" require:"true"`
