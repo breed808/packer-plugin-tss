@@ -19,7 +19,7 @@ Then, run [ `packer init` ](https://www.packer.io/docs/commands/init).
 packer {
   required_plugins {
     tss = {
-      version = ">= 0.1.0"
+      version = ">= 0.2.0"
       source  = "github.com/breed808/tss"
     }
   }
@@ -121,8 +121,8 @@ build {
       datacenter          = "PackerDatacenter"
       datastore           = "datastore1"
       host                = "123.45.678.9"
-      password            = data.mock-data.fields.username
-      username            = data.mock-data.fields.password
+      password            = data.tss.mock-data.fields.username
+      username            = data.tss.mock-data.fields.password
     }
   }
 }
@@ -132,7 +132,7 @@ build {
 
 ```hcl
 local "my_secret_password" {
-  expression = "${data.mock-data.fields.password}"
+  expression = "${data.tss.mock-data.fields.password}"
   sensitive  = true
 }
 ```
