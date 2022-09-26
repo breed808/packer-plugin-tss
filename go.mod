@@ -5,7 +5,7 @@ replace github.com/thycotic/tss-sdk-go => github.com/breed808/tss-sdk-go v1.0.1-
 go 1.16
 
 require (
-	github.com/hashicorp/hcl/v2 v2.14.0
+	github.com/hashicorp/hcl/v2 v2.14.1
 	github.com/hashicorp/packer-plugin-sdk v0.3.2
 	github.com/thycotic/tss-sdk-go v1.0.0
 	github.com/zclconf/go-cty v1.11.0
