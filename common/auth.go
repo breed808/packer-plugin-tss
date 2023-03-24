@@ -3,7 +3,7 @@
 
 package common
 
-import tss "github.com/thycotic/tss-sdk-go/server"
+import tss "github.com/DelineaXPM/tss-sdk-go/v2/server"
 
 type AuthConfig struct {
 	// Username of account with access to Thycotic Secret Server.
@@ -21,8 +21,8 @@ func (c *AuthConfig) CreateClient() (*tss.Server, error) {
 		Credentials: tss.UserCredential{
 			Username: c.Username,
 			Password: c.Password,
+			Domain:   c.Domain,
 		},
-		Domain:    c.Domain,
 		ServerURL: c.ServerURL,
 
 		// TLD and Tenant fields are included for completeness, but not currently handled.
