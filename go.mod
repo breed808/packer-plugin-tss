@@ -3,7 +3,7 @@ module packer-plugin-tss
 go 1.19
 
 require (
-	github.com/DelineaXPM/tss-sdk-go/v2 v2.0.0
+	github.com/DelineaXPM/tss-sdk-go/v2 v2.0.1
 	github.com/hashicorp/hcl/v2 v2.20.1
 	github.com/hashicorp/packer-plugin-sdk v0.5.2
 	github.com/zclconf/go-cty v1.13.3
