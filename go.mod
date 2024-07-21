@@ -1,6 +1,8 @@
 module packer-plugin-tss
 
-go 1.19
+go 1.21.0
+
+toolchain go1.22.5
 
 require (
 	github.com/DelineaXPM/tss-sdk-go/v2 v2.0.1
