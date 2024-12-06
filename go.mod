@@ -5,7 +5,7 @@ go 1.21.0
 toolchain go1.22.5
 
 require (
-	github.com/DelineaXPM/tss-sdk-go/v2 v2.0.1
+	github.com/DelineaXPM/tss-sdk-go/v2 v2.0.3
 	github.com/hashicorp/hcl/v2 v2.22.0
 	github.com/hashicorp/packer-plugin-sdk v0.5.4
 	github.com/zclconf/go-cty v1.13.3
